@@ -2,7 +2,9 @@
 
 Türkçe, açık kaynak ve tarayıcı tabanlı sipariş yönetimi uygulaması. Sipariş, stok, sevkiyat, faturalama, iade ve raporlama süreçlerini tek ekranda yönetir.
 
-> Canlı demo GitHub Pages üzerinden yayımlanır. Demo bağlantısı depo oluşturulduktan sonra buraya eklenecektir.
+## Canlı demo
+
+[ERP Sipariş Yönetimi canlı demosunu açın](https://ahmetkanyilmaz.github.io/erp-siparis/)
 
 ## Özellikler
 
@@ -60,4 +62,3 @@ Ardından `http://127.0.0.1:8000/` adresini açın.
 ## Lisans
 
 Bu proje [MIT Lisansı](LICENSE) ile sunulur.
-
