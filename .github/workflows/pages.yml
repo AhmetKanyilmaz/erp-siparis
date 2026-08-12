@@ -33,7 +33,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p _site
-          cp -R index.html assets css js .nojekyll _site/
+          cp -R index.html css js .nojekyll _site/
 
       - name: Pages paketini yükle
         uses: actions/upload-pages-artifact@v3
