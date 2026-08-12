@@ -1,0 +1,51 @@
+name: Windows Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Yayınlanacak mevcut sürüm etiketi
+        required: true
+        default: v1.0.0
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    runs-on: windows-latest
+    steps:
+      - name: Sürüm kaynak kodunu al
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.tag }}
+
+      - name: Node.js kur
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Bağımlılıkları kur
+        run: npm ci
+
+      - name: Windows paketlerini üret
+        run: npm run dist:win
+
+      - name: Paketleri Release'e yükle
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = node -p "require('./package.json').version"
+          $setup = "dist/ERP-Siparis-Setup-$version-x64.exe"
+          $portable = "dist/ERP-Siparis-Portable-$version-x64.exe"
+          gh release upload "${{ inputs.tag }}" `
+            $setup `
+            $portable `
+            --repo "${{ github.repository }}" `
+            --clobber
+          gh release edit "${{ inputs.tag }}" `
+            --repo "${{ github.repository }}" `
+            --draft=false `
+            --latest
