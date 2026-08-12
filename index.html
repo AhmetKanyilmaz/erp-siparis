@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self';">
     <title>ERP Sipariş Yönetimi</title>
-    <link rel="stylesheet" href="css/style.css?v=20260812-1">
+    <link rel="stylesheet" href="css/style.css?v=20260812-2">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/dashboard.css?v=20260812-2">
     <link rel="stylesheet" href="css/modals.css?v=20260812-2">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css">
 </head>
 <body>
     <!-- Sidebar -->
@@ -102,6 +101,7 @@
             <div class="header-left">
                 <h1 class="page-title">Sipariş Yönetimi</h1>
                 <p class="page-subtitle">Aktif Modül: Sipariş İşlemleri</p>
+                <span class="storage-mode-badge" id="storageModeBadge">Veri deposu hazırlanıyor…</span>
             </div>
             <div class="header-right">
                 <button class="btn btn-info" id="demoDataBtn" style="margin-right: 10px;">
@@ -930,14 +930,14 @@
     </div>
 
     <!-- JavaScript Files -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="js/database.js?v=20260812-4"></script>
+    <script src="vendor/sql-wasm.js"></script>
+    <script src="vendor/chart.umd.js"></script>
+    <script src="js/database.js?v=20260812-5"></script>
     <script src="js/siparis.js?v=20260812-4"></script>
     <script src="js/stok.js?v=20260812-1"></script>
     <script src="js/sevkiyat.js?v=20260812-6"></script>
     <script src="js/raporlar.js"></script>
     <script src="js/fatura.js"></script>
-    <script src="js/app.js?v=20260812-1"></script>
+    <script src="js/app.js?v=20260812-2"></script>
 </body>
 </html>

@@ -3,22 +3,50 @@ class DatabaseManager {
     constructor() {
         this.db = null;
         this.SQL = null;
+        this.desktopBridge = window.erpDesktop?.isDesktop ? window.erpDesktop : null;
         this.initPromise = this.initDatabase();
+    }
+
+    base64ToBytes(base64) {
+        const binary = atob(base64);
+        const bytes = new Uint8Array(binary.length);
+        for (let index = 0; index < binary.length; index += 1) {
+            bytes[index] = binary.charCodeAt(index);
+        }
+        return bytes;
+    }
+
+    persistDatabaseBytes(data, markReset = false) {
+        if (this.desktopBridge) {
+            return this.desktopBridge.saveDatabase(data);
+        }
+
+        const serializedData = JSON.stringify(Array.from(data));
+        localStorage.setItem('erp_database', serializedData);
+        if (markReset) localStorage.setItem('erp_database_reset', 'true');
+        return { path: 'localStorage', bytes: data.length, serializedData };
     }
 
     async initDatabase() {
         try {
-            // SQL.js'i başlat
+            // SQL.js'i yerel paketinden başlat. Aynı dosyalar hem web demosunda
+            // hem de çevrimdışı Electron paketinde kullanılır.
             const SQL = await initSqlJs({
-                locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/${file}`
+                locateFile: file => `vendor/${file}`
             });
             this.SQL = SQL;
 
-            // Mevcut veritabanını localStorage'dan yükle veya yeni oluştur
-            const existingData = localStorage.getItem('erp_database');
-            const dahaOnceSifirlandi = localStorage.getItem('erp_database_reset') === 'true';
+            // Masaüstünde standart .sqlite dosyasını, web demosunda localStorage'ı yükle.
+            const existingData = this.desktopBridge
+                ? this.desktopBridge.loadDatabase()
+                : localStorage.getItem('erp_database');
+            const dahaOnceSifirlandi = this.desktopBridge
+                ? false
+                : localStorage.getItem('erp_database_reset') === 'true';
             if (existingData) {
-                const uInt8Array = new Uint8Array(JSON.parse(existingData));
+                const uInt8Array = this.desktopBridge
+                    ? this.base64ToBytes(existingData)
+                    : new Uint8Array(JSON.parse(existingData));
                 this.db = new SQL.Database(uInt8Array);
 
                 // CREATE TABLE IF NOT EXISTS kullandığımız için her açılışta çalıştırmak
@@ -523,11 +551,8 @@ class DatabaseManager {
                 throw new Error(`Sıfırlama doğrulaması başarısız: ${toplamKalan} kayıt kaldı`);
             }
 
-            const serializedData = JSON.stringify(Array.from(this.db.export()));
-            localStorage.setItem('erp_database_reset', 'true');
-            localStorage.setItem('erp_database', serializedData);
-
-            if (localStorage.getItem('erp_database') !== serializedData) {
+            const kayitSonucu = this.persistDatabaseBytes(this.db.export(), true);
+            if (!this.desktopBridge && localStorage.getItem('erp_database') !== kayitSonucu.serializedData) {
                 throw new Error('Sıfırlanan veritabanı tarayıcı depolamasına yazılamadı');
             }
 
@@ -556,9 +581,10 @@ class DatabaseManager {
     saveDatabase() {
         try {
             const data = this.db.export();
-            localStorage.setItem('erp_database', JSON.stringify(Array.from(data)));
+            this.persistDatabaseBytes(data);
         } catch (error) {
             console.error('Veritabanı kaydetme hatası:', error);
+            throw error;
         }
     }
 
