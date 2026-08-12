@@ -30,7 +30,9 @@ jobs:
         run: npm ci
 
       - name: Windows paketlerini üret
-        run: npm run dist:win
+        run: |
+          npm run vendor
+          npx electron-builder --win --x64 --publish never
 
       - name: Paketleri Release'e yükle
         shell: pwsh
