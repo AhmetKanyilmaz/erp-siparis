@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ERP Sipariş Yönetimi</title>
+    <link rel="stylesheet" href="css/style.css?v=20260812-1">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/dashboard.css?v=20260812-2">
+    <link rel="stylesheet" href="css/modals.css?v=20260812-2">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-boxes"></i>
+                <span>ERP System</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-module="finans">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Finans Yönetimi</span>
+                        <span class="status-badge disabled">❌</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-module="tedarik">
+                        <i class="fas fa-truck"></i>
+                        <span>Tedarik Yönetimi</span>
+                        <span class="status-badge disabled">❌</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-module="uretim">
+                        <i class="fas fa-industry"></i>
+                        <span>Üretim Yönetimi</span>
+                        <span class="status-badge disabled">❌</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" data-module="siparis">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Sipariş Yönetimi</span>
+                        <span class="status-badge active">✅</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-module="depo">
+                        <i class="fas fa-warehouse"></i>
+                        <span>Depo Yönetimi</span>
+                        <span class="status-badge disabled">❌</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-module="musteri">
+                        <i class="fas fa-users"></i>
+                        <span>Müşteri İlişkileri</span>
+                        <span class="status-badge disabled">❌</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-module="ik">
+                        <i class="fas fa-user-tie"></i>
+                        <span>İnsan Kaynakları</span>
+                        <span class="status-badge disabled">❌</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-module="pazarlama">
+                        <i class="fas fa-bullhorn"></i>
+                        <span>Pazarlama</span>
+                        <span class="status-badge disabled">❌</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" data-module="eticaret">
+                        <i class="fas fa-globe"></i>
+                        <span>E-Ticaret</span>
+                        <span class="status-badge disabled">❌</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <h1 class="page-title">Sipariş Yönetimi</h1>
+                <p class="page-subtitle">Aktif Modül: Sipariş İşlemleri</p>
+            </div>
+            <div class="header-right">
+                <button class="btn btn-info" id="demoDataBtn" style="margin-right: 10px;">
+                    <i class="fas fa-flask"></i>
+                    Demo Verisi Yükle
+                </button>
+                <button class="btn btn-warning" id="resetDbBtn" style="margin-right: 10px;">
+                    <i class="fas fa-database"></i>
+                    DB Sıfırla
+                </button>
+                <button class="btn btn-primary" id="yeniSiparisBtn">
+                    <i class="fas fa-plus"></i>
+                    Yeni Sipariş
+                </button>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard">
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="toplamSiparis">0</h3>
+                        <p>Toplam Sipariş</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon pending">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="bekleyenSiparis">0</h3>
+                        <p>Bekleyen Sipariş</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon shipped">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="sevkEdilen">0</h3>
+                        <p>Sevk Edilen</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon revenue">
+                        <i class="fas fa-lira-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h3 id="toplamCiro">0</h3>
+                        <p>Toplam Ciro</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-secondary" id="siparisListesiBtn">
+                    <i class="fas fa-list"></i>
+                    Sipariş Listesi
+                </button>
+                <button class="btn btn-secondary" id="stokDurumuBtn">
+                    <i class="fas fa-boxes"></i>
+                    Stok Durumu
+                </button>
+                <button class="btn btn-secondary" id="sevkiyatPlanBtn">
+                    <i class="fas fa-calendar-alt"></i>
+                    Sevkiyat Planı
+                </button>
+                <button class="btn btn-secondary" id="faturalamaBtnMain">
+                    <i class="fas fa-file-invoice"></i>
+                    Faturalama
+                </button>
+                <button class="btn btn-secondary" id="raporlarBtn">
+                    <i class="fas fa-chart-bar"></i>
+                    Raporlar
+                </button>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area" id="contentArea">
+                <!-- Sipariş Listesi Tablosu -->
+                <div class="content-section active" id="siparisListesi">
+                    <div class="section-header">
+                        <h2>Müşteri Siparişleri</h2>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary" id="siparisYenileBtn" style="margin-right: 10px;">
+                                <i class="fas fa-sync"></i>
+                                Yenile
+                            </button>
+                            <div class="search-bar">
+                                <input type="text" id="siparisArama" placeholder="Sipariş ara...">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-filters" id="siparisFiltreleri">
+                        <div class="filter-field">
+                            <label for="siparisDurumFiltre">Durum</label>
+                            <select id="siparisDurumFiltre">
+                                <option value="">Tüm durumlar</option>
+                                <option value="bekliyor">Bekliyor</option>
+                                <option value="onaylandi">Onaylandı</option>
+                                <option value="hazirlaniyor">Hazırlanıyor</option>
+                                <option value="sevk_edildi">Sevk edildi</option>
+                                <option value="kargoya_verildi">Kargoya verildi</option>
+                                <option value="dagitim_subesinde">Dağıtım şubesinde</option>
+                                <option value="dagitimda">Dağıtımda</option>
+                                <option value="teslim_edildi">Teslim edildi</option>
+                                <option value="faturalanmis">Faturalandı</option>
+                                <option value="kismi_iade">Kısmi iade</option>
+                                <option value="iade_edildi">İade edildi</option>
+                                <option value="iptal">İptal</option>
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label for="siparisBaslangicTarihi">Başlangıç</label>
+                            <input type="date" id="siparisBaslangicTarihi">
+                        </div>
+                        <div class="filter-field">
+                            <label for="siparisBitisTarihi">Bitiş</label>
+                            <input type="date" id="siparisBitisTarihi">
+                        </div>
+                        <div class="filter-field">
+                            <label for="siparisSehirFiltre">Şehir</label>
+                            <select id="siparisSehirFiltre">
+                                <option value="">Tüm şehirler</option>
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label for="siparisMinTutar">Min. tutar</label>
+                            <input type="number" id="siparisMinTutar" min="0" step="0.01" placeholder="0">
+                        </div>
+                        <div class="filter-field">
+                            <label for="siparisMaxTutar">Maks. tutar</label>
+                            <input type="number" id="siparisMaxTutar" min="0" step="0.01" placeholder="∞">
+                        </div>
+                        <div class="filter-field">
+                            <label for="siparisSirala">Sıralama</label>
+                            <select id="siparisSirala">
+                                <option value="tarih_desc">En yeni</option>
+                                <option value="tarih_asc">En eski</option>
+                                <option value="tutar_desc">Tutar: yüksekten</option>
+                                <option value="tutar_asc">Tutar: düşükten</option>
+                                <option value="musteri_asc">Müşteri: A-Z</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-secondary filter-clear-btn" id="siparisFiltreTemizleBtn" type="button">
+                            <i class="fas fa-filter-circle-xmark"></i> Temizle
+                        </button>
+                    </div>
+                    <div class="filter-summary" id="siparisFiltreOzeti"></div>
+                    
+                    <div class="table-container">
+                        <table class="data-table" id="siparisTablosu">
+                            <thead>
+                                <tr>
+                                    <th>Sipariş No</th>
+                                    <th>Müşteri</th>
+                                    <th>Tarih</th>
+                                    <th>Ürün</th>
+                                    <th>Miktar</th>
+                                    <th>Toplam</th>
+                                    <th>Durum</th>
+                                    <th>Stok</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="siparisListesiBody">
+                                <!-- Dinamik olarak doldurulacak -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-pagination" id="siparisSayfalama"></div>
+                </div>
+
+                <!-- Stok Durumu -->
+                <div class="content-section" id="stokDurumu">
+                    <div class="section-header">
+                        <h2>Stok Durumu</h2>
+                        <button class="btn btn-primary" id="stokGuncelleBtn">
+                            <i class="fas fa-box-open"></i>
+                            Ürün / Stok Yönetimi
+                        </button>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table" id="stokTablosu">
+                            <thead>
+                                <tr>
+                                    <th>Ürün Kodu</th>
+                                    <th>Ürün Adı</th>
+                                    <th>Mevcut Stok</th>
+                                    <th>Minimum Stok</th>
+                                    <th>Birim Fiyat</th>
+                                    <th>Durum</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="stokListesiBody">
+                                <!-- Dinamik olarak doldurulacak -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sevkiyat Planı -->
+                <div class="content-section" id="sevkiyatPlan">
+                    <div class="section-header">
+                        <h2>Sevkiyat Planlaması</h2>
+                        <div class="header-actions">
+                            <button class="btn btn-info" id="sevkiyatTakipBtn" style="margin-right: 10px;">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Sevkiyat Takip
+                            </button>
+                            <button class="btn btn-primary" id="sevkiyatPlanlaBtn">
+                                <i class="fas fa-plus"></i>
+                                Yeni Plan
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="sevkiyat-cards" id="sevkiyatCards">
+                        <!-- Dinamik olarak doldurulacak -->
+                    </div>
+                </div>
+
+                <!-- Raporlar -->
+                <div class="content-section" id="raporlar">
+                    <div class="section-header">
+                        <h2>Raporlar ve Analizler</h2>
+                    </div>
+                    
+                    <div class="report-grid">
+                        <div class="report-card">
+                            <h3>Satış Raporu</h3>
+                            <canvas id="satisGrafik"></canvas>
+                        </div>
+                        <div class="report-card">
+                            <h3>Stok Analizi</h3>
+                            <canvas id="stokGrafik"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Faturalama -->
+                <div class="content-section" id="faturalama">
+                    <div class="section-header">
+                        <h2>Fatura Yönetimi</h2>
+                        <div class="header-actions">
+                            <button class="btn btn-primary" id="faturaOlusturBtn">
+                                <i class="fas fa-plus"></i>
+                                Fatura Oluştur
+                            </button>
+                            <div class="search-bar">
+                                <input type="text" id="faturaArama" placeholder="Fatura ara...">
+                                <i class="fas fa-search"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-container">
+                        <table class="data-table" id="faturaTablosu">
+                            <thead>
+                                <tr>
+                                    <th>Fatura No</th>
+                                    <th>Müşteri</th>
+                                    <th>Tarih</th>
+                                    <th>Vade</th>
+                                    <th>Durum</th>
+                                    <th>Toplam</th>
+                                    <th>Ödeme</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="faturaListesiBody">
+                                <!-- Dinamik olarak doldurulacak -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Yeni Sipariş Modal -->
+    <div class="modal" id="yeniSiparisModal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3 id="siparisFormBaslik">Yeni Sipariş Oluştur</h3>
+                <button class="modal-close" data-modal="yeniSiparisModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="yeniSiparisForm">
+                    <input type="hidden" id="siparisDuzenlemeId" name="siparisDuzenlemeId">
+                    <div class="form-group">
+                        <label for="musteriAdi">Müşteri Adı</label>
+                        <input type="text" id="musteriAdi" name="musteriAdi" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="musteriTelefon">Telefon</label>
+                            <input type="tel" id="musteriTelefon" name="musteriTelefon" placeholder="0532 123 4567" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="musteriSehir">Şehir</label>
+                            <select id="musteriSehir" name="musteriSehir" required>
+                                <option value="">Şehir seçin...</option>
+                                <option value="Adana">Adana</option>
+                                <option value="Adıyaman">Adıyaman</option>
+                                <option value="Afyonkarahisar">Afyonkarahisar</option>
+                                <option value="Ağrı">Ağrı</option>
+                                <option value="Aksaray">Aksaray</option>
+                                <option value="Amasya">Amasya</option>
+                                <option value="Ankara">Ankara</option>
+                                <option value="Antalya">Antalya</option>
+                                <option value="Ardahan">Ardahan</option>
+                                <option value="Artvin">Artvin</option>
+                                <option value="Aydın">Aydın</option>
+                                <option value="Balıkesir">Balıkesir</option>
+                                <option value="Bartın">Bartın</option>
+                                <option value="Batman">Batman</option>
+                                <option value="Bayburt">Bayburt</option>
+                                <option value="Bilecik">Bilecik</option>
+                                <option value="Bingöl">Bingöl</option>
+                                <option value="Bitlis">Bitlis</option>
+                                <option value="Bolu">Bolu</option>
+                                <option value="Burdur">Burdur</option>
+                                <option value="Bursa">Bursa</option>
+                                <option value="Çanakkale">Çanakkale</option>
+                                <option value="Çankırı">Çankırı</option>
+                                <option value="Çorum">Çorum</option>
+                                <option value="Denizli">Denizli</option>
+                                <option value="Diyarbakır">Diyarbakır</option>
+                                <option value="Düzce">Düzce</option>
+                                <option value="Edirne">Edirne</option>
+                                <option value="Elazığ">Elazığ</option>
+                                <option value="Erzincan">Erzincan</option>
+                                <option value="Erzurum">Erzurum</option>
+                                <option value="Eskişehir">Eskişehir</option>
+                                <option value="Gaziantep">Gaziantep</option>
+                                <option value="Giresun">Giresun</option>
+                                <option value="Gümüşhane">Gümüşhane</option>
+                                <option value="Hakkari">Hakkari</option>
+                                <option value="Hatay">Hatay</option>
+                                <option value="Iğdır">Iğdır</option>
+                                <option value="Isparta">Isparta</option>
+                                <option value="İstanbul">İstanbul</option>
+                                <option value="İzmir">İzmir</option>
+                                <option value="Kahramanmaraş">Kahramanmaraş</option>
+                                <option value="Karabük">Karabük</option>
+                                <option value="Karaman">Karaman</option>
+                                <option value="Kars">Kars</option>
+                                <option value="Kastamonu">Kastamonu</option>
+                                <option value="Kayseri">Kayseri</option>
+                                <option value="Kırıkkale">Kırıkkale</option>
+                                <option value="Kırklareli">Kırklareli</option>
+                                <option value="Kırşehir">Kırşehir</option>
+                                <option value="Kilis">Kilis</option>
+                                <option value="Kocaeli">Kocaeli</option>
+                                <option value="Konya">Konya</option>
+                                <option value="Kütahya">Kütahya</option>
+                                <option value="Malatya">Malatya</option>
+                                <option value="Manisa">Manisa</option>
+                                <option value="Mardin">Mardin</option>
+                                <option value="Mersin">Mersin</option>
+                                <option value="Muğla">Muğla</option>
+                                <option value="Muş">Muş</option>
+                                <option value="Nevşehir">Nevşehir</option>
+                                <option value="Niğde">Niğde</option>
+                                <option value="Ordu">Ordu</option>
+                                <option value="Osmaniye">Osmaniye</option>
+                                <option value="Rize">Rize</option>
+                                <option value="Sakarya">Sakarya</option>
+                                <option value="Samsun">Samsun</option>
+                                <option value="Siirt">Siirt</option>
+                                <option value="Sinop">Sinop</option>
+                                <option value="Sivas">Sivas</option>
+                                <option value="Şanlıurfa">Şanlıurfa</option>
+                                <option value="Şırnak">Şırnak</option>
+                                <option value="Tekirdağ">Tekirdağ</option>
+                                <option value="Tokat">Tokat</option>
+                                <option value="Trabzon">Trabzon</option>
+                                <option value="Tunceli">Tunceli</option>
+                                <option value="Uşak">Uşak</option>
+                                <option value="Van">Van</option>
+                                <option value="Yalova">Yalova</option>
+                                <option value="Yozgat">Yozgat</option>
+                                <option value="Zonguldak">Zonguldak</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="musteriAdres">Adres</label>
+                        <textarea id="musteriAdres" name="musteriAdres" rows="2" placeholder="Teslimat adresi..." required></textarea>
+                    </div>
+                    
+                    <div class="cart-builder">
+                        <div class="cart-builder-title">
+                            <div>
+                                <h4>Sipariş Ürünleri</h4>
+                                <p>Her ürün için ayrı bir satır kullanın; ürün ve miktarı doğrudan satır üzerinde seçin.</p>
+                            </div>
+                            <button type="button" class="btn btn-primary" id="urunSatiriEkleBtn">
+                                <i class="fas fa-plus"></i> Ürün Satırı Ekle
+                            </button>
+                        </div>
+                        <div class="order-lines-header" aria-hidden="true">
+                            <span>Ürün</span>
+                            <span>Stok</span>
+                            <span>Miktar</span>
+                            <span>Birim Fiyat</span>
+                            <span>Toplam</span>
+                            <span></span>
+                        </div>
+                        <div class="order-lines" id="siparisUrunSatirlari"></div>
+                        <div class="cart-total">
+                            <span>Genel Toplam</span>
+                            <strong id="sepetGenelToplam">₺0,00</strong>
+                            <input type="hidden" id="toplamTutar" name="toplamTutar" value="0">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="siparisNotlari">Sipariş Notu</label>
+                        <textarea id="siparisNotlari" name="siparisNotlari" rows="2" placeholder="Hazırlama veya teslimat notu (opsiyonel)"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" data-modal="yeniSiparisModal">İptal</button>
+                        <button type="submit" class="btn btn-primary" id="siparisKaydetBtn">Sipariş Oluştur</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stok Güncelle Modal -->
+    <div class="modal" id="stokGuncelleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Stok Güncelle</h3>
+                <button class="modal-close" data-modal="stokGuncelleModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="stokGuncelleForm">
+                    <div class="form-group">
+                        <label for="stokUrunKodu">Ürün Kodu</label>
+                        <input type="text" id="stokUrunKodu" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stokUrunAdi">Ürün Adı</label>
+                        <input type="text" id="stokUrunAdi" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="yeniStokMiktari">Yeni Stok Miktarı</label>
+                        <input type="number" id="yeniStokMiktari" min="0" required>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" data-modal="stokGuncelleModal">İptal</button>
+                        <button type="submit" class="btn btn-primary">Güncelle</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sevkiyat Takip Modal -->
+    <div class="modal" id="sevkiyatTakipModal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3>Sevkiyat Takip</h3>
+                <button class="modal-close" data-modal="sevkiyatTakipModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="takipForm">
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="takipSiparisSecim">Sipariş Seçin</label>
+                            <select id="takipSiparisSecim" name="takipSiparisSecim" required>
+                                <option value="">Sipariş Seçin</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="takipMevcutDurum">Mevcut Durum</label>
+                            <input type="text" id="takipMevcutDurum" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="takipMusteriAdi">Müşteri</label>
+                            <input type="text" id="takipMusteriAdi" readonly>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="takipSiparisNo">Sipariş No</label>
+                            <input type="text" id="takipSiparisNo" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Takip Geçmişi</label>
+                        <div class="table-container" style="max-height: 200px; overflow-y: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Tarih</th>
+                                        <th>Durum</th>
+                                        <th>Konum</th>
+                                        <th>Açıklama</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="takipGecmisiBody">
+                                    <!-- Dinamik doldurulacak -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <h4>Yeni Takip Ekle</h4>
+                    
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="yeniDurum">Yeni Durum</label>
+                            <select id="yeniDurum" name="yeniDurum" required>
+                                <option value="">Yeni Durum Seçin</option>
+                                <option value="hazirlaniyor">Hazırlanıyor</option>
+                                <option value="kargoya_verildi">Kargoya Verildi</option>
+                                <option value="dagitim_subesinde">Dağıtım Şubesinde</option>
+                                <option value="dagitimda">Dağıtımda</option>
+                                <option value="teslim_edildi">Teslim Edildi</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="takipKonum">Konum/Şube</label>
+                            <input type="text" id="takipKonum" name="takipKonum" placeholder="Örn: İstanbul Dağıtım Merkezi">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="takipAciklama">Açıklama</label>
+                        <textarea id="takipAciklama" name="takipAciklama" rows="3" placeholder="Ek bilgiler (opsiyonel)"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" data-modal="sevkiyatTakipModal">İptal</button>
+                        <button type="button" class="btn btn-primary" onclick="sevkiyatManager.takipEkle()">Takip Ekle</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fatura Oluştur Modal -->
+    <div class="modal" id="faturaModal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3>Fatura Oluştur</h3>
+                <button class="modal-close" data-modal="faturaModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="faturaForm">
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="siparisSecim">Sipariş Seçin</label>
+                            <select id="siparisSecim" name="siparisSecim" required>
+                                <option value="">Sipariş Seçin</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="vadeGun">Vade (Gün)</label>
+                            <select id="vadeGun" name="vadeGun">
+                                <option value="0">Peşin</option>
+                                <option value="15">15 Gün</option>
+                                <option value="30" selected>30 Gün</option>
+                                <option value="45">45 Gün</option>
+                                <option value="60">60 Gün</option>
+                                <option value="90">90 Gün</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-4">
+                            <label for="musteriAdiFatura">Müşteri Adı</label>
+                            <input type="text" id="musteriAdiFatura" name="musteriAdiFatura" readonly>
+                        </div>
+                        <div class="form-group col-4">
+                            <label for="musteriTelefonFatura">Telefon</label>
+                            <input type="text" id="musteriTelefonFatura" name="musteriTelefonFatura" readonly>
+                        </div>
+                        <div class="form-group col-4">
+                            <label for="musteriAdresFatura">Adres</label>
+                            <input type="text" id="musteriAdresFatura" name="musteriAdresFatura" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Fatura Detayları</label>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Ürün Kodu</th>
+                                        <th>Ürün Adı</th>
+                                        <th>Miktar</th>
+                                        <th>Birim Fiyat</th>
+                                        <th>Toplam</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="faturaDetaylariBody">
+                                    <!-- Dinamik doldurulacak -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="form-row four-cols">
+                        <div class="form-group col-3">
+                            <label for="kdvOrani">KDV Oranı (%)</label>
+                            <select id="kdvOrani" name="kdvOrani">
+                                <option value="0">%0</option>
+                                <option value="8">%8</option>
+                                <option value="18" selected>%18</option>
+                                <option value="28">%28</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-3">
+                            <label for="araToplam">Ara Toplam</label>
+                            <input type="number" id="araToplam" name="araToplam" step="0.01" readonly>
+                        </div>
+                        <div class="form-group col-3">
+                            <label for="kdvTutari">KDV Tutarı</label>
+                            <input type="number" id="kdvTutari" name="kdvTutari" step="0.01" readonly>
+                        </div>
+                        <div class="form-group col-3">
+                            <label for="toplamTutarFatura">Toplam Tutar</label>
+                            <input type="number" id="toplamTutarFatura" name="toplamTutarFatura" step="0.01" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group col-6">
+                            <label for="vadeTarihi">Vade Tarihi</label>
+                            <input type="date" id="vadeTarihi" name="vadeTarihi" required>
+                        </div>
+                        <div class="form-group col-6">
+                            <label for="odemeSekli">Ödeme Şekli</label>
+                            <select id="odemeSekli" name="odemeSekli">
+                                <option value="nakit">Nakit</option>
+                                <option value="kredi_karti">Kredi Kartı</option>
+                                <option value="havale">Havale/EFT</option>
+                                <option value="cek">Çek</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="faturaNotlari">Notlar</label>
+                        <textarea id="faturaNotlari" name="faturaNotlari" rows="3" placeholder="Ek notlar (opsiyonel)"></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" data-modal="faturaModal">İptal</button>
+                        <button type="submit" class="btn btn-primary">Fatura Oluştur</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fatura Detay Modal -->
+    <div class="modal" id="faturaDetayModal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <h3>Fatura Detayları</h3>
+                <button class="modal-close" data-modal="faturaDetayModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="invoice-header">
+                    <div class="invoice-info">
+                        <h4>Fatura No: <span id="detayFaturaNo"></span></h4>
+                        <p><strong>Müşteri:</strong> <span id="detayMusteriAdi"></span></p>
+                        <p><strong>Tarih:</strong> <span id="detayFaturaTarihi"></span></p>
+                        <p><strong>Vade:</strong> <span id="detayVadeTarihi"></span></p>
+                        <p><strong>Durum:</strong> <span id="detayDurum"></span></p>
+                        <p><strong>Toplam:</strong> <span id="detayToplamTutar"></span></p>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Ürün Kodu</th>
+                                <th>Ürün Adı</th>
+                                <th>Miktar</th>
+                                <th>Birim Fiyat</th>
+                                <th>KDV</th>
+                                <th>Toplam</th>
+                            </tr>
+                        </thead>
+                        <tbody id="faturaDetayTabloBody">
+                            <!-- Dinamik doldurulacak -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sipariş Detayı ve Zaman Çizelgesi -->
+    <div class="modal" id="siparisDetayModal">
+        <div class="modal-content modal-xl">
+            <div class="modal-header">
+                <div>
+                    <h3>Sipariş Detayı</h3>
+                    <p class="modal-subtitle" id="siparisDetayAltBaslik"></p>
+                </div>
+                <button class="modal-close" data-modal="siparisDetayModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="order-detail-grid">
+                    <section class="order-detail-main">
+                        <div class="detail-info-grid" id="siparisDetayBilgileri"></div>
+                        <h4 class="detail-section-title">Ürünler</h4>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Kod</th>
+                                        <th>Ürün</th>
+                                        <th>Miktar</th>
+                                        <th>İade</th>
+                                        <th>Birim Fiyat</th>
+                                        <th>Toplam</th>
+                                        <th>Güncel Stok</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="siparisDetayUrunler"></tbody>
+                            </table>
+                        </div>
+                        <div id="siparisIadeGecmisi"></div>
+                    </section>
+                    <aside class="order-timeline-panel">
+                        <h4 class="detail-section-title">Zaman Çizelgesi</h4>
+                        <div class="order-timeline" id="siparisZamanCizelgesi"></div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sipariş İade Yönetimi -->
+    <div class="modal" id="siparisIadeModal">
+        <div class="modal-content modal-lg">
+            <div class="modal-header">
+                <div>
+                    <h3>İade Oluştur</h3>
+                    <p class="modal-subtitle" id="iadeSiparisBilgisi"></p>
+                </div>
+                <button class="modal-close" data-modal="siparisIadeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="siparisIadeForm">
+                    <input type="hidden" id="iadeSiparisId">
+                    <div class="return-product-list" id="iadeUrunListesi"></div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="iadeNedeni">İade Nedeni</label>
+                            <select id="iadeNedeni" required>
+                                <option value="">Neden seçin...</option>
+                                <option value="Hasarlı ürün">Hasarlı ürün</option>
+                                <option value="Yanlış ürün">Yanlış ürün</option>
+                                <option value="Eksik veya hatalı sipariş">Eksik veya hatalı sipariş</option>
+                                <option value="Müşteri vazgeçti">Müşteri vazgeçti</option>
+                                <option value="Diğer">Diğer</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="iadeAciklama">Açıklama</label>
+                            <textarea id="iadeAciklama" rows="2" placeholder="İade hakkında ek bilgi"></textarea>
+                        </div>
+                    </div>
+                    <div class="return-summary">
+                        <span>İade Tutarı</span>
+                        <strong id="iadeToplamTutar">₺0,00</strong>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" data-modal="siparisIadeModal">İptal</button>
+                        <button type="submit" class="btn btn-danger"><i class="fas fa-rotate-left"></i> İadeyi Tamamla</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/database.js?v=20260812-4"></script>
+    <script src="js/siparis.js?v=20260812-4"></script>
+    <script src="js/stok.js?v=20260812-1"></script>
+    <script src="js/sevkiyat.js?v=20260812-6"></script>
+    <script src="js/raporlar.js"></script>
+    <script src="js/fatura.js"></script>
+    <script src="js/app.js?v=20260812-1"></script>
+</body>
+</html>

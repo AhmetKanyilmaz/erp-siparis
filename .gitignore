@@ -1,0 +1,20 @@
+# Yerel geliştirme çıktıları
+_video_out/
+node_modules/
+out/
+dist/
+
+# İşletim sistemi ve editör geçici dosyaları
+.DS_Store
+Thumbs.db
+*.log
+
+# İleride eklenecek masaüstü veritabanı ve yedekleri
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.backup
+
