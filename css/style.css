@@ -111,6 +111,25 @@ body {
     color: var(--gray-500);
 }
 
+.storage-mode-badge {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 0.3rem;
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--gray-300);
+    border-radius: 999px;
+    background: var(--gray-50);
+    color: var(--gray-500);
+    font-size: 0.7rem;
+    font-weight: 600;
+}
+
+.storage-mode-badge.desktop {
+    border-color: #a7f3d0;
+    background: #ecfdf5;
+    color: #047857;
+}
+
 /* Buttons */
 .btn {
     display: inline-flex;

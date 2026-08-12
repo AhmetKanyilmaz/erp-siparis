@@ -510,6 +510,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         // Veritabanının hazır olmasını bekle
         await db.initPromise;
+
+        const storageModeBadge = document.getElementById('storageModeBadge');
+        if (storageModeBadge) {
+            if (window.erpDesktop?.isDesktop) {
+                const databasePath = window.erpDesktop.getDatabasePath();
+                storageModeBadge.textContent = 'Masaüstü · SQLite dosyası';
+                storageModeBadge.title = databasePath;
+                storageModeBadge.classList.add('desktop');
+            } else {
+                storageModeBadge.textContent = 'Web demo · Tarayıcı depolaması';
+                storageModeBadge.title = 'Veriler yalnızca bu tarayıcıda saklanır.';
+            }
+        }
         
         // Uygulamayı başlat
         window.app = new ERPApp();

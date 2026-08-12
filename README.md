@@ -1,6 +1,15 @@
 # ERP Sipariş Yönetimi
 
-Türkçe, açık kaynak ve tarayıcı tabanlı sipariş yönetimi uygulaması. Sipariş, stok, sevkiyat, faturalama, iade ve raporlama süreçlerini tek ekranda yönetir.
+Türkçe ve açık kaynak sipariş yönetimi uygulaması. Sipariş, stok, sevkiyat, faturalama, iade ve raporlama süreçlerini tek ekranda yönetir. Web demosu ve kalıcı SQLite dosyası kullanan Windows masaüstü sürümü birlikte sunulur.
+
+## Windows uygulaması
+
+[En güncel Windows sürümünü GitHub Releases üzerinden indirin](https://github.com/AhmetKanyilmaz/erp-siparis/releases/latest)
+
+- `ERP-Siparis-Setup-...exe`: Bilgisayara kurulan sürüm
+- `ERP-Siparis-Portable-...exe`: Kurulum gerektirmeyen taşınabilir sürüm
+- Windows x64 desteklenir.
+- Paketler kod imzası içermediği için Windows ilk açılışta SmartScreen uyarısı gösterebilir.
 
 ## Canlı demo
 
@@ -28,7 +37,15 @@ Web demosu `sql.js` ile SQLite'ı tarayıcı içinde çalıştırır ve verileri
 - Tarayıcı verileri temizlenirse demo kayıtları silinebilir.
 - Sunucu tarafına müşteri veya sipariş verisi gönderilmez.
 
-Gerçek yerel `.sqlite` dosyası kullanan çevrimdışı masaüstü sürümü ilerleyen aşamada GitHub Releases bölümünde yayımlanacaktır.
+## Masaüstü veritabanı
+
+Masaüstü sürümü verileri standart bir `erp-siparis.sqlite` dosyasında saklar. Dosyanın tam konumuna uygulamadaki **Veritabanı > Veritabanı Konumunu Aç** menüsünden ulaşabilirsiniz.
+
+- Veriler uygulama kapatılıp açıldığında korunur.
+- Yazma işlemleri geçici dosya ve güvenlik yedeği kullanılarak tamamlanır.
+- **Veritabanı > Yedek Al** ile `.sqlite` yedeği oluşturulabilir.
+- **Veritabanı > Yedekten Geri Yükle** ile daha önce alınan yedek kullanılabilir.
+- Veritabanı dosyası standart SQLite araçlarıyla açılabilir.
 
 ## Yerelde çalıştırma
 
@@ -40,6 +57,19 @@ python -m http.server 8000
 
 Ardından `http://127.0.0.1:8000/` adresini açın.
 
+Masaüstü geliştirme sürümü için Node.js 22 veya üzeriyle:
+
+```powershell
+npm install
+npm start
+```
+
+Windows paketlerini üretmek için:
+
+```powershell
+npm run dist:win
+```
+
 ## Teknolojiler
 
 - HTML5
@@ -49,15 +79,12 @@ Ardından `http://127.0.0.1:8000/` adresini açın.
 - Chart.js
 - Font Awesome
 - GitHub Pages
+- Electron
 
 ## Yol haritası
 
-- Electron masaüstü uygulaması
-- Kalıcı yerel SQLite veritabanı
-- Veritabanı yedekleme ve geri yükleme
-- Windows kurulum dosyası
-- GitHub Releases üzerinden sürüm dağıtımı
 - Otomatik güncelleme
+- Kod imzalama
 
 ## Lisans
 
